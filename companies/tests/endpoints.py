@@ -77,3 +77,24 @@ def test_retrieve_company_detail_by_cnpj(api_client: APIClient):
     assert response.status_code == status.HTTP_200_OK, response.json()
     assert "cnpj" in response.data
     assert response.data["cnpj"] == company.cnpj
+
+
+@pytest.mark.django_db
+@factory.Faker.override_default_locale("pt_BR")
+def test_retrieve_members_from_company(api_client: APIClient):
+    companies: List[Company] = CompanyFactory.create_batch(2)
+    company, unrelated_company = companies[0], companies[1]
+
+    memberships: List[Membership] = MembershipFactory.create_batch(5, company=company)
+    unrelated_memberships: List[Membership] = MembershipFactory.create_batch(
+        10, company=unrelated_company
+    )
+
+    url = reverse("companies:members:list", kwargs={"cnpj": company.cnpj})
+    response = api_client.get(url)
+    assert response.status_code == status.HTTP_200_OK, response.json()
+    assert len(response.data) == len(memberships)
+
+    emails = [v["user"] for v in response.data]
+    assertion_msg = "None of unrelated users must belong to company."
+    assert all(c not in emails for c in unrelated_memberships), assertion_msg

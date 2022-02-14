@@ -30,4 +30,4 @@ class MembershipViewSet(ListModelMixin, CreateModelMixin, GenericViewSet):
     permission_classes = (AllowAny,)
 
     def get_queryset(self) -> QuerySet[Membership]:
-        return super().get_queryset()
+        return Membership.objects.filter(company__cnpj=self.kwargs["cnpj"])
