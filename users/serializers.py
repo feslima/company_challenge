@@ -1,11 +1,13 @@
 from typing import Any, Dict
 
+from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as CoreValidationError
 from rest_framework.serializers import (
     CharField,
     EmailField,
     ModelSerializer,
+    Serializer,
     ValidationError,
 )
 
@@ -75,3 +77,18 @@ class CompanyUserSerializer(ModelSerializer):
             email=email, first_name=first_name, surname=surname, password=password
         )
         return user
+
+
+class LoginSerializer(Serializer):
+    email = EmailField(write_only=True)
+    password = CharField(write_only=True)
+
+    def validate(self, attrs: Dict[str, Any]) -> Dict[str, Any]:
+        user = authenticate(username=attrs["email"], password=attrs["password"])
+        if user is None:
+            msg = "Invalid credentials."
+            raise ValidationError(
+                {"email": msg, "password": msg}, code="invalid_credentials"
+            )
+
+        return {"user": user}
