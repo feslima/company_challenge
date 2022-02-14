@@ -9,23 +9,20 @@ from users.models import CompanyUser
 
 
 @pytest.mark.django_db
-def test_login(
+def test_logout(
     api_client: APIClient, user_data: Dict[str, Any], registered_user: CompanyUser
 ):
-    # Unauthenticated request should fail
+    api_client.login(email=user_data["email"], password=user_data["password"])
+
     protected_url = reverse("companies:list")
     response = api_client.get(protected_url)
-
-    assert response.status_code == status.HTTP_403_FORBIDDEN, response.json()
-
-    # login
-    url = reverse("users:login")
-    response = api_client.post(
-        url, data={"email": user_data["email"], "password": user_data["password"]}
-    )
-
     assert response.status_code == status.HTTP_200_OK, response.json()
 
-    # Authenticated user should be able to see the protected url
+    # logging out
+    url = reverse("users:logout")
+    response = api_client.post(url)
+    assert response.status_code == status.HTTP_204_NO_CONTENT, response.json()
+
+    # protected url should fail
     response = api_client.get(protected_url)
-    assert response.status_code == status.HTTP_200_OK, response.json()
+    assert response.status_code == status.HTTP_403_FORBIDDEN, response.json()
