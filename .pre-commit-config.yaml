@@ -43,3 +43,4 @@ repos:
           - djangorestframework
           - djangorestframework-stubs
           - django-cors-headers
+          - celery

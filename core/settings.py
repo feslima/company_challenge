@@ -160,3 +160,6 @@ REST_FRAMEWORK = {
     ],
     "NON_FIELD_ERRORS_KEY": "error",
 }
+
+# --------------------------------------- CELERY ---------------------------------------
+CELERY_BROKER_URL = os.environ["CELERY_BROKER_URL"]

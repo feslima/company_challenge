@@ -14,7 +14,10 @@ services:
       - ENV_FILE_PATH=./configurations/dev.env
       - POSTGRES_HOST=db
       - POSTGRES_PORT=5432
+      - CELERY_BROKER_URL=redis://redis:6379
     depends_on:
+      redis:
+        condition: service_healthy
       db:
         condition: service_healthy
   db:
@@ -27,10 +30,38 @@ services:
       - ./configurations/dev.env
     healthcheck:
       # condition to ensure deployment safety
-      test: ["CMD-SHELL", "pg_isready -d $$POSTGRES_DB -U $$POSTGRES_USER"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -d $$POSTGRES_DB -U $$POSTGRES_USER"
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
+  redis:
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+  celery:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: celery --app core worker --loglevel=INFO
+    env_file:
+      - ./configurations/dev.env
+    environment:
+      - ENV_FILE_PATH=./configurations/dev.env
+      - CELERY_BROKER_URL=redis://redis:6379
+    volumes:
+      - ./:/usr/src/backend/
+    depends_on:
+      redis:
+        condition: service_healthy
 
 volumes:
   postgres_data:
