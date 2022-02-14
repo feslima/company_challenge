@@ -51,7 +51,7 @@ ALLOWED_HOSTS: List[str] = []
 # Application definition
 AUTH_USER_MODEL = "users.CompanyUser"
 
-CUSTOM_APPS = ["users"]
+CUSTOM_APPS = ["users", "companies"]
 
 THIRD_PARTY_APPS = [
     "django_extensions",
