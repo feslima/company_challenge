@@ -14,7 +14,7 @@ def test_logout(
 ):
     api_client.login(email=user_data["email"], password=user_data["password"])
 
-    protected_url = reverse("companies:list")
+    protected_url = reverse("users:companies")
     response = api_client.get(protected_url)
     assert response.status_code == status.HTTP_200_OK, response.json()
 

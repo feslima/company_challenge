@@ -13,7 +13,7 @@ def test_login(
     api_client: APIClient, user_data: Dict[str, Any], registered_user: CompanyUser
 ):
     # Unauthenticated request should fail
-    protected_url = reverse("companies:list")
+    protected_url = reverse("users:companies")
     response = api_client.get(protected_url)
 
     assert response.status_code == status.HTTP_403_FORBIDDEN, response.json()
