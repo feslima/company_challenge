@@ -43,3 +43,12 @@ repos:
           - djangorestframework
           - djangorestframework-stubs
           - django-cors-headers
+
+  - repo: local
+    hooks:
+      - id: pytest-on-push
+        name: Run tests before push
+        entry: env ENV_FILE_PATH=configurations/dev.env pytest
+        language: python
+        types: [python]
+        stages: [push]
