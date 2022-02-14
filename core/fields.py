@@ -29,8 +29,10 @@ class CNPJField(CharField):
 
     def __init__(self, *args, **kwargs):
         kwargs["verbose_name"] = "CNPJ"
-        kwargs["max_length"] = 18
+        kwargs["max_length"] = 14
 
-        kwargs["help_text"] = _("Format: 00.000.000/0001-00.")
+        kwargs["help_text"] = _(
+            "Format: 14 numeric-only digits. E.g. 12.345.678/0001-12 -> 1234567800012"
+        )
 
         super().__init__(*args, **kwargs)
