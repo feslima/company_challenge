@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db.models import (
     CASCADE,
     CharField,
+    DateTimeField,
     ForeignKey,
     ManyToManyField,
     Model,
@@ -17,7 +18,9 @@ class Company(Model):
     corporate_name = CharField(max_length=100)  # Razao social
     trading_name = CharField(max_length=100)  # Nome fantasia
 
-    users = ManyToManyField(settings.AUTH_USER_MODEL, through="Membership")
+    users = ManyToManyField(
+        settings.AUTH_USER_MODEL, through="Membership", related_name="companies"
+    )
 
 
 class Membership(Model):
@@ -38,3 +41,7 @@ class Membership(Model):
         settings.AUTH_USER_MODEL, on_delete=CASCADE, related_name="memberships"
     )
     company = ForeignKey(Company, on_delete=CASCADE, related_name="members")
+
+    date_joined = DateTimeField(
+        "date joined", auto_now_add=True, help_text="When the user joined the company"
+    )
