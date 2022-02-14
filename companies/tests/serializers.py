@@ -1,5 +1,6 @@
 from typing import Any, Dict
 
+import factory
 import pytest
 from faker import Faker
 
@@ -31,6 +32,7 @@ def test_creation_serializer(
 
 
 @pytest.mark.django_db
+@factory.Faker.override_default_locale("pt_BR")
 def test_cnpj_uniqueness(company_data: Dict[str, Any], registered_user: CompanyUser):
     CompanyFactory.create(**company_data)
 

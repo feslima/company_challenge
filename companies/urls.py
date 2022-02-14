@@ -4,10 +4,10 @@ from .views import CompanyCreationViewSet, CompanyViewSet, MembershipViewSet
 
 company_add = CompanyCreationViewSet.as_view({"post": "create"})
 company_list = CompanyViewSet.as_view({"get": "list"})
-company_new_member = MembershipViewSet.as_view({"post": "create"})
+member_add = MembershipViewSet.as_view({"post": "create"})
 
 members_patterns = [
-    path("new/", company_new_member, name="new"),
+    path("new/", member_add, name="create"),
 ]
 
 urlpatterns = [
