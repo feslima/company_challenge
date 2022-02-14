@@ -7,8 +7,12 @@ from rest_framework.viewsets import GenericViewSet
 
 from users.models import CompanyUser
 
-from .models import Company
-from .serializers import CompanyCreationSerializer, CompanySerializer
+from .models import Company, Membership
+from .serializers import (
+    CompanyCreationSerializer,
+    CompanySerializer,
+    MembershipSerializer,
+)
 
 
 class CompanyCreationViewSet(CreateModelMixin, GenericViewSet):
@@ -24,3 +28,9 @@ class CompanyViewSet(ListModelMixin, GenericViewSet):
     def get_queryset(self) -> QuerySet[Company]:
         user = cast(CompanyUser, self.request.user)  # covered by permission_classes
         return Company.objects.filter(users=user)
+
+
+class MembershipViewSet(CreateModelMixin, GenericViewSet):
+    queryset = Membership.objects.all()
+    serializer_class = MembershipSerializer
+    permission_classes = (AllowAny,)

@@ -6,6 +6,7 @@ from rest_framework.serializers import (
     SlugRelatedField,
     ValidationError,
 )
+from rest_framework.validators import UniqueTogetherValidator
 
 from users.models import CompanyUser
 
@@ -63,3 +64,23 @@ class CompanyCreationSerializer(ModelSerializer):
             membership.save()
 
         return membership
+
+
+class MembershipSerializer(ModelSerializer):
+    class Meta:
+        model = Membership
+        fields = ["user", "company"]
+        validators = [
+            UniqueTogetherValidator(
+                fields=["user", "company"],
+                queryset=Membership.objects.all(),
+                message="This user is already registered in this company.",
+            )
+        ]
+
+    user = SlugRelatedField(
+        slug_field="email", many=False, queryset=CompanyUser.objects.all()
+    )
+    company = SlugRelatedField(
+        slug_field="cnpj", many=False, queryset=Company.objects.all()
+    )
