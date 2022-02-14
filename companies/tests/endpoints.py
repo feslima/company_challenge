@@ -1,4 +1,5 @@
-from typing import Any, Dict
+from random import choice
+from typing import Any, Dict, List
 
 import factory
 import pytest
@@ -7,7 +8,7 @@ from rest_framework.reverse import reverse
 from rest_framework.settings import api_settings
 from rest_framework.test import APIClient
 
-from companies.factories import MembershipFactory
+from companies.factories import CompanyFactory, MembershipFactory
 from companies.models import Company, Membership
 from users.factories import CompanyUserFactory
 from users.models import CompanyUser
@@ -36,7 +37,7 @@ def test_membership_creation(api_client: APIClient):
     new_user: CompanyUser = CompanyUserFactory.create()
     cnpj = membership.company.cnpj
     data = {"company": cnpj, "user": new_user.email}
-    url = reverse("companies:members:create")
+    url = reverse("companies:members:create", kwargs={"cnpj": cnpj})
     response = api_client.post(url, data=data, format="json")
 
     assert response.status_code == status.HTTP_201_CREATED, response.json()
@@ -53,7 +54,7 @@ def test_membership_uniqueness(api_client: APIClient):
     cnpj = membership.company.cnpj
 
     data = {"company": cnpj, "user": user.email}
-    url = reverse("companies:members:create")
+    url = reverse("companies:members:create", kwargs={"cnpj": cnpj})
 
     response = api_client.post(url, data=data, format="json")
     assert response.status_code == status.HTTP_400_BAD_REQUEST, response.json()
@@ -63,3 +64,16 @@ def test_membership_uniqueness(api_client: APIClient):
 
     assert len(errors) == 1
     assert error_msg in errors[0]
+
+
+@pytest.mark.django_db
+@factory.Faker.override_default_locale("pt_BR")
+def test_retrieve_company_detail_by_cnpj(api_client: APIClient):
+    companies: List[Company] = CompanyFactory.create_batch(4)
+    company: Company = choice(companies)
+
+    url = reverse("companies:detail", kwargs={"cnpj": company.cnpj})
+    response = api_client.get(url)
+    assert response.status_code == status.HTTP_200_OK, response.json()
+    assert "cnpj" in response.data
+    assert response.data["cnpj"] == company.cnpj

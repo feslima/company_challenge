@@ -1,5 +1,6 @@
-from rest_framework.mixins import CreateModelMixin, ListModelMixin
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.db.models import QuerySet
+from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin
+from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import GenericViewSet
 
 from .models import Company, Membership
@@ -16,12 +17,17 @@ class CompanyCreationViewSet(CreateModelMixin, GenericViewSet):
     permission_classes = (AllowAny,)
 
 
-class CompanyViewSet(ListModelMixin, GenericViewSet):
+class CompanyViewSet(RetrieveModelMixin, GenericViewSet):
+    queryset = Company.objects.all()
     serializer_class = CompanySerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
+
+    lookup_field = "cnpj"
 
 
-class MembershipViewSet(CreateModelMixin, GenericViewSet):
-    queryset = Membership.objects.all()
+class MembershipViewSet(ListModelMixin, CreateModelMixin, GenericViewSet):
     serializer_class = MembershipSerializer
     permission_classes = (AllowAny,)
+
+    def get_queryset(self) -> QuerySet[Membership]:
+        return super().get_queryset()
