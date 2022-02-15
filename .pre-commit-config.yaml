@@ -44,3 +44,7 @@ repos:
           - django-cors-headers
           - celery
           - drf-spectacular
+          - requests
+          - types-requests
+          - freezegun
+          - types-freezegun
