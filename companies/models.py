@@ -1,3 +1,4 @@
+import django.utils.timezone
 from django.conf import settings
 from django.db.models import (
     CASCADE,
@@ -18,6 +19,14 @@ class Company(Model):
     company_name = CharField(max_length=100, help_text="Also known as 'Razão Social'.")
     commercial_name = CharField(
         max_length=100, help_text="Also known as 'Nome fantasia'."
+    )
+    created = DateTimeField(
+        "created", auto_now_add=True, help_text="When the company was created."
+    )
+    last_update = DateTimeField(
+        "last update",
+        default=django.utils.timezone.now,
+        help_text="Last time this company was synchronized against receitaws.",
     )
 
     users = ManyToManyField(
