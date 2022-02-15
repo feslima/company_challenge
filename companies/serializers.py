@@ -33,6 +33,8 @@ class CompanyMemberCreationSerializer(ModelSerializer):
 
 
 class CompanySerializer(ModelSerializer):
+    """Responsible for listing and retrieving companies details."""
+
     class Meta:
         model = Company
         fields = ["cnpj", "company_name", "commercial_name"]
@@ -43,7 +45,10 @@ class CompanyCreationSerializer(ModelSerializer):
     identifier (email), at the moment the company is created."""
 
     user = SlugRelatedField(
-        slug_field="email", many=False, queryset=CompanyUser.objects.all()
+        slug_field="email",
+        many=False,
+        queryset=CompanyUser.objects.all(),
+        help_text="Email of user to be associated when this company is created.",
     )
     company = CompanySerializer()
 
@@ -79,8 +84,14 @@ class MembershipSerializer(ModelSerializer):
         ]
 
     user = SlugRelatedField(
-        slug_field="email", many=False, queryset=CompanyUser.objects.all()
+        slug_field="email",
+        many=False,
+        queryset=CompanyUser.objects.all(),
+        help_text="User's email.",
     )
     company = SlugRelatedField(
-        slug_field="cnpj", many=False, queryset=Company.objects.all()
+        slug_field="cnpj",
+        many=False,
+        queryset=Company.objects.all(),
+        help_text="Company's CNPJ.",
     )

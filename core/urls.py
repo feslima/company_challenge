@@ -21,7 +21,7 @@ from .views import SwaggerSchemaView
 urlpatterns = [
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
-        "swagger/",
+        "docs/",
         SwaggerSchemaView.as_view(),
         name="schema-swagger-ui",
     ),

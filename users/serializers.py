@@ -25,10 +25,13 @@ class CompanyUserSerializer(ModelSerializer):
             "email_confirm",
             "password_confirm",
         )
-        extra_kwargs = {"password": {"write_only": True}}
+        extra_kwargs = {
+            "email": {"help_text": "User's email."},
+            "password": {"write_only": True, "help_text": "User's password."},
+        }
 
-    email_confirm = EmailField(write_only=True)
-    password_confirm = CharField(write_only=True)
+    email_confirm = EmailField(write_only=True, help_text="Confirm email address.")
+    password_confirm = CharField(write_only=True, help_text="Confirm password.")
 
     def validate(self, data: Dict[str, Any]) -> Dict[str, Any]:
 
@@ -80,8 +83,8 @@ class CompanyUserSerializer(ModelSerializer):
 
 
 class LoginSerializer(Serializer):
-    email = EmailField()
-    password = CharField(write_only=True)
+    email = EmailField(help_text="User's email.")
+    password = CharField(write_only=True, help_text="User's password.")
 
     def validate(self, attrs: Dict[str, Any]) -> Dict[str, Any]:
         user = authenticate(username=attrs["email"], password=attrs["password"])

@@ -1,7 +1,10 @@
 from django.db.models import QuerySet
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import GenericViewSet
+
+from core.openapi import CNPJ_PARAMETER
 
 from .models import Company, Membership
 from .serializers import (
@@ -12,11 +15,19 @@ from .serializers import (
 
 
 class CompanyCreationViewSet(CreateModelMixin, GenericViewSet):
+    """Creates a company."""
+
     queryset = Company.objects.all()
     serializer_class = CompanyCreationSerializer
     permission_classes = (AllowAny,)
 
 
+@extend_schema_view(
+    list=extend_schema(description="List all companies."),
+    retrieve=extend_schema(
+        description="Single company detail.", parameters=[CNPJ_PARAMETER]
+    ),
+)
 class CompanyViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
@@ -25,6 +36,14 @@ class CompanyViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     lookup_field = "cnpj"
 
 
+@extend_schema_view(
+    list=extend_schema(
+        description="List all members in this company.", parameters=[CNPJ_PARAMETER]
+    ),
+    create=extend_schema(
+        description="Create a new member for this company.", parameters=[CNPJ_PARAMETER]
+    ),
+)
 class MembershipViewSet(ListModelMixin, CreateModelMixin, GenericViewSet):
     serializer_class = MembershipSerializer
     permission_classes = (AllowAny,)

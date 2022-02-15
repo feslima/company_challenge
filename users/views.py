@@ -2,13 +2,12 @@ from typing import cast
 
 from django.contrib.auth import logout
 from django.db.models import QuerySet
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import OpenApiExample, extend_schema, extend_schema_view
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from companies.models import Company
 from companies.serializers import CompanySerializer
@@ -17,7 +16,36 @@ from .models import CompanyUser
 from .serializers import CompanyUserSerializer, LoginSerializer
 
 
+@extend_schema_view(
+    post=extend_schema(
+        examples=[
+            OpenApiExample(
+                "Signup request example",
+                value={
+                    "first_name": "Fulano",
+                    "surname": "Cicrano Beltrano",
+                    "email": "your.address@mail.com",
+                    "email_confirm": "your.address@mail.com",
+                    "password": "y0UrP4sSwOrD",
+                    "password_confirm": "y0UrP4sSwOrD",
+                },
+                request_only=True,
+            ),
+            OpenApiExample(
+                "Signup response example",
+                value={
+                    "email": "your.address@mail.com",
+                    "first_name": "Fulano",
+                    "surname": "Cicrano Beltrano",
+                },
+                response_only=True,
+            ),
+        ],
+    )
+)
 class CompanyUserRegisterView(CreateAPIView):
+    """Create a new user account."""
+
     serializer_class = CompanyUserSerializer
     permission_classes = (AllowAny,)
 
@@ -30,13 +58,13 @@ class LoginView(CreateAPIView):
     http_method_names = ["post"]
 
 
-class LogoutView(APIView):
+class LogoutView(GenericAPIView):
     """Logout authenticated users on POST."""
 
     permission_classes = (IsAuthenticated,)
     http_method_names = ["post"]
 
-    @extend_schema(responses={204: None})
+    @extend_schema(request=None, responses={204: None})
     def post(self, request: Request) -> Response:
         logout(request)
 

@@ -169,4 +169,6 @@ CELERY_BROKER_URL = os.environ["CELERY_BROKER_URL"]
 # ---------------------------------- DRF-Spectacular -----------------------------------
 SPECTACULAR_SETTINGS = {
     "TITLE": "Company API",
+    "DESCRIPTION": "Company API for your use case.",
+    "VERSION": "0.0.1",
 }
