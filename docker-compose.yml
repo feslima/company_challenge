@@ -11,7 +11,6 @@ services:
     ports:
       - 8000:8000
     environment:
-      - ENV_FILE_PATH=./configurations/dev.env
       - POSTGRES_HOST=db
       - POSTGRES_PORT=5432
       - CELERY_BROKER_URL=redis://redis:6379
@@ -55,7 +54,6 @@ services:
     env_file:
       - ./configurations/dev.env
     environment:
-      - ENV_FILE_PATH=./configurations/dev.env
       - CELERY_BROKER_URL=redis://redis:6379
     volumes:
       - ./:/usr/src/backend/

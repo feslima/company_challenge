@@ -12,7 +12,6 @@ psycopg2-binary = "^2.9.3"
 django-extensions = "^3.1.5"
 djangorestframework = "^3.13.1"
 django-cors-headers = "^3.11.0"
-python-dotenv = "^0.19.2"
 celery = { extras = ["redis"], version = "^5.2.3" }
 drf-spectacular = "^0.21.2"
 

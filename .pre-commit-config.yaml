@@ -32,10 +32,9 @@ repos:
     rev: v0.931
     hooks:
       - id: mypy
-        entry: env ENV_FILE_PATH=configurations/dev.env mypy
+        entry: bash -c 'env $(grep -v '^#' configurations/dev.env | xargs) mypy "$@"' --
         exclude: .*/migrations/
         additional_dependencies:
-          - python-dotenv
           - pytest
           - psycopg2-binary
           - django-extensions

@@ -15,35 +15,30 @@ from pathlib import Path
 from typing import List
 
 from django.core.exceptions import ImproperlyConfigured
-from dotenv import load_dotenv
-
-# Load environment configurations if env file config is present
-ENV_FILE_PATH = Path(os.getenv("ENV_FILE_PATH", "."))
-if (
-    ENV_FILE_PATH.exists()
-    and ENV_FILE_PATH.is_file()
-    and ENV_FILE_PATH.suffix == ".env"
-):
-    load_dotenv(dotenv_path=ENV_FILE_PATH)
-else:
-    raise ImproperlyConfigured(
-        "You need to provide the ENV_FILE_PATH environment variable. "
-        "It needs to be a .env file. "
-        f"You provided '{ENV_FILE_PATH.resolve()}'."
-    )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environment configurations
+SECRET_KEY = os.getenv("SECRET_KEY", None)
+
+# Checking if env config is loaded correctly
+if SECRET_KEY is None:
+    TEMPLATE_PATH = BASE_DIR / "configurations" / "env_template"
+    raise ImproperlyConfigured(
+        "You need to provide the required environment variables.\n"
+        "If you are seeing this error, probably you didn't load what is needed.\n"
+        "You have to define the environment variables listed in the file "
+        f"'{TEMPLATE_PATH}'."
+    )
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ["SECRET_KEY"]
+SECRET_KEY = os.getenv("SECRET_KEY", None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS: List[str] = []
 
