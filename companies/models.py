@@ -15,8 +15,10 @@ from core.fields import CNPJField, PrimaryKeyUUIDField
 class Company(Model):
     id = PrimaryKeyUUIDField()
     cnpj = CNPJField(unique=True)
-    corporate_name = CharField(max_length=100)  # Razao social
-    trading_name = CharField(max_length=100)  # Nome fantasia
+    company_name = CharField(max_length=100, help_text="Also known as 'Razão Social'.")
+    commercial_name = CharField(
+        max_length=100, help_text="Also known as 'Nome fantasia'."
+    )
 
     users = ManyToManyField(
         settings.AUTH_USER_MODEL, through="Membership", related_name="companies"
@@ -43,5 +45,5 @@ class Membership(Model):
     company = ForeignKey(Company, on_delete=CASCADE, related_name="members")
 
     date_joined = DateTimeField(
-        "date joined", auto_now_add=True, help_text="When the user joined the company"
+        "date joined", auto_now_add=True, help_text="When the user joined the company."
     )

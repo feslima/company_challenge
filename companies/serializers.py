@@ -35,7 +35,7 @@ class CompanyMemberCreationSerializer(ModelSerializer):
 class CompanySerializer(ModelSerializer):
     class Meta:
         model = Company
-        fields = ["cnpj", "corporate_name", "trading_name"]
+        fields = ["cnpj", "company_name", "commercial_name"]
 
 
 class CompanyCreationSerializer(ModelSerializer):

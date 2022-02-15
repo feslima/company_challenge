@@ -14,8 +14,8 @@ class CompanyFactory(factory.django.DjangoModelFactory):
         raw_cnpj = factory.Faker("cnpj")
 
     cnpj = factory.LazyAttribute(lambda o: sanitize_cnpj(o.raw_cnpj))
-    corporate_name = factory.Faker("company")
-    trading_name = factory.Faker("catch_phrase")
+    company_name = factory.Faker("company")
+    commercial_name = factory.Faker("catch_phrase")
 
 
 class MembershipFactory(factory.django.DjangoModelFactory):
