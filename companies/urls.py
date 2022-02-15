@@ -26,9 +26,11 @@ register_converter(CNPJConverter, "cnpj")
 
 company_add = CompanyCreationViewSet.as_view({"post": "create"})
 company_detail = CompanyViewSet.as_view({"get": "retrieve"})
+company_list = CompanyViewSet.as_view({"get": "list"})
 urlpatterns = [
-    path("<cnpj:cnpj>/", company_detail, name="detail"),
+    path("", company_list, name="list"),
     path("add/", company_add, name="create"),
+    path("<cnpj:cnpj>/", company_detail, name="detail"),
     path(
         "<cnpj:cnpj>/members/",
         include((members_patterns, "members"), namespace="members"),

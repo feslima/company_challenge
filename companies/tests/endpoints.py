@@ -68,6 +68,17 @@ def test_membership_uniqueness(api_client: APIClient):
 
 @pytest.mark.django_db
 @factory.Faker.override_default_locale("pt_BR")
+def test_retrieve_company_list(api_client: APIClient):
+    companies: List[Company] = CompanyFactory.create_batch(4)
+
+    url = reverse("companies:list")
+    response = api_client.get(url)
+    assert response.status_code == status.HTTP_200_OK, response.json()
+    assert len(response.data) == len(companies)
+
+
+@pytest.mark.django_db
+@factory.Faker.override_default_locale("pt_BR")
 def test_retrieve_company_detail_by_cnpj(api_client: APIClient):
     companies: List[Company] = CompanyFactory.create_batch(4)
     company: Company = choice(companies)

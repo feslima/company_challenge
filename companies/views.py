@@ -17,7 +17,7 @@ class CompanyCreationViewSet(CreateModelMixin, GenericViewSet):
     permission_classes = (AllowAny,)
 
 
-class CompanyViewSet(RetrieveModelMixin, GenericViewSet):
+class CompanyViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
     permission_classes = (AllowAny,)
