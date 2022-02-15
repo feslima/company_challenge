@@ -24,7 +24,7 @@ def test_login(
         url, data={"email": user_data["email"], "password": user_data["password"]}
     )
 
-    assert response.status_code == status.HTTP_200_OK, response.json()
+    assert response.status_code == status.HTTP_201_CREATED, response.json()
 
     # Authenticated user should be able to see the protected url
     response = api_client.get(protected_url)

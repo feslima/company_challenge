@@ -1,6 +1,6 @@
 from typing import cast
 
-from django.contrib.auth import login, logout
+from django.contrib.auth import logout
 from django.db.models import QuerySet
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, ListAPIView
@@ -21,18 +21,12 @@ class CompanyUserRegisterView(CreateAPIView):
     permission_classes = (AllowAny,)
 
 
-class LoginView(APIView):
+class LoginView(CreateAPIView):
+    """Login an user."""
+
+    serializer_class = LoginSerializer
     permission_classes = (AllowAny,)
     http_method_names = ["post"]
-
-    def post(self, request: Request) -> Response:
-        serializer = LoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        user = serializer.validated_data["user"]
-        login(request, user)
-
-        return Response({"success": "Login successful."}, status=status.HTTP_200_OK)
 
 
 class LogoutView(APIView):

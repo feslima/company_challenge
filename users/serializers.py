@@ -1,6 +1,6 @@
 from typing import Any, Dict
 
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as CoreValidationError
 from rest_framework.serializers import (
@@ -80,7 +80,7 @@ class CompanyUserSerializer(ModelSerializer):
 
 
 class LoginSerializer(Serializer):
-    email = EmailField(write_only=True)
+    email = EmailField()
     password = CharField(write_only=True)
 
     def validate(self, attrs: Dict[str, Any]) -> Dict[str, Any]:
@@ -92,3 +92,8 @@ class LoginSerializer(Serializer):
             )
 
         return {"user": user}
+
+    def create(self, validated_data: Dict[str, CompanyUser]) -> Dict[str, str]:
+        user = validated_data["user"]
+        login(self.context["request"], user)
+        return {"email": user.email}
