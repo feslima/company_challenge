@@ -44,3 +44,4 @@ repos:
           - djangorestframework-stubs
           - django-cors-headers
           - celery
+          - drf-spectacular

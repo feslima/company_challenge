@@ -57,6 +57,7 @@ THIRD_PARTY_APPS = [
     "django_extensions",
     "rest_framework",
     "corsheaders",
+    "drf_spectacular",
 ]
 
 INSTALLED_APPS = [
@@ -159,7 +160,13 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
     ],
     "NON_FIELD_ERRORS_KEY": "error",
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 # --------------------------------------- CELERY ---------------------------------------
 CELERY_BROKER_URL = os.environ["CELERY_BROKER_URL"]
+
+# ---------------------------------- DRF-Spectacular -----------------------------------
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Company API",
+}
