@@ -37,7 +37,7 @@ The challenge is described in the [CHALLENGE.md](CHALLENGE.md) file. This is the
 ## Locally with poetry
 This is messier than the [`docker-compose`](#with-docker-compose) approach. You are encouraged to use that approach. With this being said:
 
-1. You need to have [poetry]() installed before running backend service.
+1. You need to have [poetry](https://python-poetry.org/) installed before running backend service.
 2. You need to have a PostgreSQL and Redis servers configured to the values you defined in your `dev.env` file.
 3. Run the following commands:
     ```shell
